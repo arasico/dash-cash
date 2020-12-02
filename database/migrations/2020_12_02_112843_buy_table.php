@@ -18,7 +18,7 @@ class BuyTable extends Migration
             $table->string('user');
             $table->string('symbol');
             $table->decimal('quantity');
-            $table->decimal('price');
+            $table->decimal('bought_price_all');
             $table->timestamps();
         });
     }
