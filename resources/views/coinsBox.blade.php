@@ -48,7 +48,8 @@
     </style>
 </head>
 <body>
-
+<h3>allProfit:{{$allProfit}}</h3>
+<h3>allProfitPercent:{{$allProfitPercent}}</h3>
 <div style="width: 100%; float: right; height: 100vh;">
     @foreach($coinsBox as $value)
         <div class="card {{ $value['profit_percent'] < 0 ? 'redCandle' : 'yellowCandle' }}

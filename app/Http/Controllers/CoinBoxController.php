@@ -13,6 +13,8 @@ class CoinBoxController extends Controller
         $endpoint = "https://api.binance.com/api/v3/ticker/24hr";
         $client = new \GuzzleHttp\Client();
         $coinsBox = array();
+        $all_profit = 0;
+        $all_profit_percent = 0;
         foreach ($buy as $key => $value) {
             $response = $client->request('GET', $endpoint, ['query' => [
                 'symbol' => $value['symbol']
@@ -25,8 +27,14 @@ class CoinBoxController extends Controller
                 'profit_percent' => ((($value['amount'] * $content['lastPrice']) - $value['total']) / $value['total']) * 100,
                 'price_change_percent' => $content['priceChangePercent']];
             $coinsBox[$key] = array_merge($value->toArray(), $binanceResult);
+            $all_profit += $binanceResult['profit'];
+            $all_profit_percent += $binanceResult['profit_percent'];
         }
-        return view('coinsBox', ['coinsBox' => $coinsBox]);
+        return view('coinsBox', [
+            'coinsBox' => $coinsBox,
+            'allProfit' => $all_profit,
+            'allProfitPercent' => $all_profit_percent,
+        ]);
     }
 
     public function createBuy()
