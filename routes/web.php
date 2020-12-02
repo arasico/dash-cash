@@ -13,4 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [\App\Http\Controllers\CoinBoxController::class, 'index']);
+Route::get('/coinsBox/{user}', [\App\Http\Controllers\CoinBoxController::class, 'index']);
+Route::get('/buy', [\App\Http\Controllers\CoinBoxController::class, 'createBuy']);
+Route::post('/buy', [\App\Http\Controllers\CoinBoxController::class, 'storeBuy']);

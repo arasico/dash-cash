@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Buy;
 use Illuminate\Http\Request;
 
 class CoinBoxController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $user)
     {
+        dd(Buy::all(), $user);
         $buy = array(
             [
                 'symbol' => 'BTCUSDT',
@@ -15,7 +17,7 @@ class CoinBoxController extends Controller
                 'total' => 134.91
             ],
             [
-                'symbol' => 'JSTUSDT',
+                'symbol' => '',
                 'amount' => 7863.5,
                 'total' => 207.98958
             ]
@@ -41,4 +43,16 @@ class CoinBoxController extends Controller
 //        return view('coinsBox', ['coinsBox' => Buy::all()]);
 //        return view('coinsBox', ['coinsBox' => $coinsBox]);
     }
+
+    public function createBuy()
+    {
+        return view('buyCoin');
+    }
+
+    public function storeBuy(Request $request)
+    {
+        Buy::create($request->all());
+        return redirect('/coinsBox/' . $request->input('user'));
+    }
+
 }
