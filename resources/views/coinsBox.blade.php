@@ -7,7 +7,7 @@
         .card {
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
             width: 300px;
-            height: 400px;
+            height: 460px;
             text-align: center;
             margin: 5px;
             font-family: arial;
@@ -70,6 +70,13 @@
             </form>
             </p>
             <p>
+            <p>
+            <form class="sellManual" action="{{ url('/coin/sell/manual/'. $value['id'])}}" method="POST">
+                @csrf
+                <input type="submit" value="sell manual"/>
+            </form>
+            </p>
+            <p>
             <form class="delete" action="{{ url('/coin/delete/'. $value['id'])}}" method="POST">
                 <input type="hidden" name="_method" value="DELETE">
                 @csrf
@@ -83,6 +90,9 @@
 <script>
     $(".sell").on("submit", function () {
         return confirm("Are you sure to sell?");
+    });
+    $(".sellManual").on("submit", function () {
+        return confirm("Are you sure to sell manual?");
     });
     $(".delete").on("submit", function () {
         return confirm("Are you sure to delete ?");

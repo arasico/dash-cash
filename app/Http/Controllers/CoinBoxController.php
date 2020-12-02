@@ -100,6 +100,31 @@ class CoinBoxController extends Controller
         }
     }
 
+    public function sellManualBuy($id)
+    {
+        //get buy data
+        $buy = Buy::find($id);
+        $endpoint = "https://api.binance.com/api/v3/ticker/24hr";
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', $endpoint, ['query' => [
+            'symbol' => $buy['symbol']
+        ]]);
+        $content = json_decode($response->getBody(), true);
+        $binanceResult = [
+            'profit' => ($buy['amount'] * $content['lastPrice']) - $buy['total'],
+            'profit_percent' => ((($buy['amount'] * $content['lastPrice']) - $buy['total']) / $buy['total']) * 100,
+        ];
+
+        TotalProfit::create([
+            'user' => $buy['user'],
+            'symbol' => $binanceResult['symbol'],
+            'profit' => $binanceResult['profit'],
+            'profit_percent' => $binanceResult['profit_percent'],
+        ]);
+        Buy::where('id', $id)->delete();
+        return redirect('/coinsBox/' . $buy['user']);
+    }
+
     public function destroyBuy(Request $request, $id)
     {
         $buy = Buy::find($id);
