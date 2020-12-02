@@ -10,7 +10,12 @@
 <form action="{{url('buy')}}" method="post">
     @csrf
     <label for="user">user:</label><br>
-    <input type="text" id="user" name="user"><br>
+    <select name="user" id="user">
+        <option value="yaser">yaser</option>
+        <option value="aras">aras</option>
+        <option value="zeinab">zeinab</option>
+    </select>
+    <br>
     <label for="symbol">symbol:</label><br>
     <input type="text" id="symbol" name="symbol"><br>
     <label for="amount">amount:</label><br>

@@ -17,8 +17,8 @@ class BuyTable extends Migration
             $table->id();
             $table->string('user');
             $table->string('symbol');
-            $table->decimal('amount');
-            $table->decimal('total');
+            $table->decimal('amount', 16, 6);
+            $table->decimal('total', 16, 6);
             $table->timestamps();
         });
     }

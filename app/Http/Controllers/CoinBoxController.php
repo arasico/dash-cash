@@ -9,19 +9,7 @@ class CoinBoxController extends Controller
 {
     public function index(Request $request, $user)
     {
-        dd(Buy::all(), $user);
-        $buy = array(
-            [
-                'symbol' => 'BTCUSDT',
-                'amount' => 0.007292,
-                'total' => 134.91
-            ],
-            [
-                'symbol' => '',
-                'amount' => 7863.5,
-                'total' => 207.98958
-            ]
-        );
+        $buy = Buy::where('user', $user)->get();
         $endpoint = "https://api.binance.com/api/v3/ticker/24hr";
         $client = new \GuzzleHttp\Client();
         $coinsBox = array();
@@ -37,7 +25,7 @@ class CoinBoxController extends Controller
                 'profit' => ($value['amount'] * $content['lastPrice']) - $value['total'],
                 'profit_percent' => ((($value['amount'] * $content['lastPrice']) - $value['total']) / $value['total']) * 100,
                 'price_change_percent' => $content['priceChangePercent']];
-            $coinsBox[$key] = array_merge($value, $binanceResult);
+            $coinsBox[$key] = array_merge($value->toArray(), $binanceResult);
         }
         dd($coinsBox);
 //        return view('coinsBox', ['coinsBox' => Buy::all()]);
