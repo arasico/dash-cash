@@ -24,7 +24,5 @@
     <input type="text" id="total" name="total"><br><br>
     <input type="submit" value="Submit">
 </form>
-
-
 </body>
 </html>

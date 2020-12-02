@@ -16,8 +16,8 @@ class UserConfigTable extends Migration
         Schema::create('user_config', function (Blueprint $table) {
             $table->id();
             $table->string('user');
-            $table->string('binance-api-key');
-            $table->decimal('binance-api-secret');
+            $table->string('binance_api_key');
+            $table->decimal('binance_api_secret');
             $table->timestamps();
         });
     }
