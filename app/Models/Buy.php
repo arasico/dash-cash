@@ -17,7 +17,7 @@ class Buy extends Model
     protected $fillable = [
         'user',
         'symbol',
-        'quantity',
-        'bought_price_all',
+        'amount',
+        'total',
     ];
 }
