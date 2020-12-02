@@ -17,7 +17,7 @@ class UserConfigTable extends Migration
             $table->id();
             $table->string('user');
             $table->string('binance_api_key');
-            $table->decimal('binance_api_secret');
+            $table->string('binance_api_secret');
             $table->timestamps();
         });
     }

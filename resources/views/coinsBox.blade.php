@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta http-equiv="refresh" content="5">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         .card {
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -18,7 +19,7 @@
             font-size: 22px;
         }
 
-        .card button {
+        .card input {
             border: none;
             outline: 0;
             padding: 12px;
@@ -63,14 +64,30 @@
             <p>profit_percent:{{$value['profit_percent']}}</p>
             <p>price_change_percent:{{$value['price_change_percent']}}</p>
             <p>
-                <button>sell</button>
+            <form class="sell" action="{{ url('/coin/sell/'. $value['id'])}}" method="POST">
+                @csrf
+                <input type="submit" value="sell"/>
+            </form>
             </p>
             <p>
-                <button>delete</button>
+            <form class="delete" action="{{ url('/coin/delete/'. $value['id'])}}" method="POST">
+                <input type="hidden" name="_method" value="DELETE">
+                @csrf
+                <input type="submit" value="Delete"/>
+            </form>
             </p>
         </div>
     @endforeach
 </div>
+
+<script>
+    $(".sell").on("submit", function () {
+        return confirm("Are you sure to sell?");
+    });
+    $(".delete").on("submit", function () {
+        return confirm("Are you sure to delete ?");
+    });
+</script>
 </body>
 </html>
 
