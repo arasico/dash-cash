@@ -31,7 +31,9 @@ class CoinBoxController extends Controller
             $content = json_decode($response->getBody(), true);
             $binanceResult = [
                 'current_price' => $content['lastPrice'],
+                'current_total' => ($value['amount'] * $content['lastPrice']),
                 'profit' => ($value['amount'] * $content['lastPrice']) - $value['total'],
+                'profit_percent' => ((($value['amount'] * $content['lastPrice']) - $value['total']) / $value['total']) * 100,
                 'price_change_percent' => $content['priceChangePercent']];
             $coinBox[$key] = array_merge($value, $binanceResult);
         }
