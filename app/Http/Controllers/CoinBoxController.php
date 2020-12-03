@@ -7,6 +7,7 @@ use App\Models\TotalProfit;
 use App\Models\UserConfig;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class CoinBoxController extends Controller
 {
@@ -66,29 +67,26 @@ class CoinBoxController extends Controller
             'profit' => ($buy['amount'] * $content['lastPrice']) - $buy['total'],
             'profit_percent' => ((($buy['amount'] * $content['lastPrice']) - $buy['total']) / $buy['total']) * 100,
         ];
-
         //sell
         $userConfig = UserConfig::where('user', $buy['user'])->first();
+        $timestamp = strtotime('now') * 1000;
+        $string = 'symbol=' . $buy['symbol'] . '&side=SELL&type=MARKET&quantity=' .
+            $buy['amount'] . '&newClientOrderId=my_order_id_' . $buy['id'] . '&timestamp=' . $timestamp;
+        $sig = hash_hmac('sha256', $string, $userConfig['binance_api_secret']);
         $endpointSell = "https://api.binance.com/api/v3/order";
         $responseSell = $client->request('POST', $endpointSell, ['query' => [
             'symbol' => $buy['symbol'],
             'side' => 'SELL',
-            'type' => 'LIMIT',
-            'timeInForce' => 'GTC',
+            'type' => 'MARKET',
             'quantity' => $buy['amount'],
-            'price' => '100',
             'newClientOrderId' => 'my_order_id_' . $buy['id'],
-            'timestamp' => '2326558065',
-            'signature' => 'arasico',
-            'recvWindow' => 10000
+            'timestamp' => $timestamp,
+            'signature' => $sig,
         ], 'headers' => [
             'Content-Type' => 'application/json',
             'X-MBX-APIKEY' => $userConfig['binance_api_key']
         ]]);
-//        'price' => $content['lastPrice'],
         $contentSell = json_decode($responseSell->getBody(), true);
-
-        dd($contentSell, $responseSell->getStatusCode());
         if ($responseSell->getStatusCode() === 200) {
             TotalProfit::create([
                 'user' => $buy['user'],
@@ -98,6 +96,7 @@ class CoinBoxController extends Controller
             ]);
             Buy::where('id', $id)->delete();
         }
+        return redirect('/coinsBox/' . $buy['user']);
     }
 
     public function sellManualBuy($id)
