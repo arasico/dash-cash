@@ -24,7 +24,7 @@ class CoinBoxController extends Controller
                 'symbol' => $value['symbol']
             ]]);
             $content = json_decode($response->getBody(), true);
-            $amount = $value['amount'] + 0;
+            $amount = $value['amount'];
             $binanceResult = [
                 'current_price' => $content['lastPrice'],
                 'current_total' => ($amount * $content['lastPrice']),
@@ -67,20 +67,19 @@ class CoinBoxController extends Controller
         $binanceResult = [
             'profit' => ($amount * $content['lastPrice']) - $buy['total'],
             'profit_percent' => ((($amount * $content['lastPrice']) - $buy['total']) / $buy['total']) * 100,
-            'current_total' => ($amount * $content['lastPrice']),
         ];
         //sell
         $userConfig = UserConfig::where('user', $buy['user'])->first();
         $timestamp = strtotime('now') * 1000;
-        $string = 'symbol=' . $buy['symbol'] . '&side=SELL&type=MARKET&quoteOrderQty=' .
-            $binanceResult['current_total'] . '&newClientOrderId=my_order_id_' . $buy['id'] . '&timestamp=' . $timestamp;
+        $string = 'symbol=' . $buy['symbol'] . '&side=SELL&type=MARKET&quantity=' .
+            $amount . '&newClientOrderId=my_order_id_' . $buy['id'] . '&timestamp=' . $timestamp;
         $sig = hash_hmac('sha256', $string, $userConfig['binance_api_secret']);
         $endpointSell = "https://api.binance.com/api/v3/order";
         $responseSell = $client->request('POST', $endpointSell, ['query' => [
             'symbol' => $buy['symbol'],
             'side' => 'SELL',
             'type' => 'MARKET',
-            'quoteOrderQty' => $binanceResult['current_total'],
+            'quantity' => $amount,
             'newClientOrderId' => 'my_order_id_' . $buy['id'],
             'timestamp' => $timestamp,
             'signature' => $sig,
