@@ -34,7 +34,6 @@ class CoinBoxController extends Controller
             $all_profit += $binanceResult['profit'];
             $all_profit_percent += $binanceResult['profit_percent'];
         }
-        $coinsBox = collect($coinsBox)->sortBy('profit_percent')->reverse()->toArray();
         return view('coinsBox', [
             'coinsBox' => $coinsBox,
             'allProfit' => $all_profit,
