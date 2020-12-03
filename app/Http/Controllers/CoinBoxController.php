@@ -25,6 +25,7 @@ class CoinBoxController extends Controller
             ]]);
             $content = json_decode($response->getBody(), true);
             $amount = $value['amount'] - (0.1 * $value['amount']) / 100;
+            $value['amount'] = $amount;
             $binanceResult = [
                 'current_price' => $content['lastPrice'],
                 'current_total' => ($amount * $content['lastPrice']),
