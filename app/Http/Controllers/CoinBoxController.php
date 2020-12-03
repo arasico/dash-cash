@@ -71,7 +71,7 @@ class CoinBoxController extends Controller
         //sell
         $userConfig = UserConfig::where('user', $buy['user'])->first();
         $timestamp = strtotime('now') * 1000;
-        $string = 'symbol=' . $buy['symbol'] . '&side=SELL&type=MARKET&quoteOrderQty=' .
+        $string = 'symbol=' . $buy['symbol'] . '&side=SELL&type=MARKET&quantity=' .
             $amount . '&newClientOrderId=my_order_id_' . $buy['id'] . '&timestamp=' . $timestamp;
         $sig = hash_hmac('sha256', $string, $userConfig['binance_api_secret']);
         $endpointSell = "https://api.binance.com/api/v3/order";
@@ -79,7 +79,7 @@ class CoinBoxController extends Controller
             'symbol' => $buy['symbol'],
             'side' => 'SELL',
             'type' => 'MARKET',
-            'quoteOrderQty' => $amount,
+            'quantity' => $amount,
             'newClientOrderId' => 'my_order_id_' . $buy['id'],
             'timestamp' => $timestamp,
             'signature' => $sig,
