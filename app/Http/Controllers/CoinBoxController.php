@@ -24,7 +24,7 @@ class CoinBoxController extends Controller
                 'symbol' => $value['symbol']
             ]]);
             $content = json_decode($response->getBody(), true);
-            if($value['amount'] > 1 )
+            if($value['amount'] < 1 )
                 $amount = $value['amount'] - ((0.2 * $value['amount']) / 100);
             $amount = $amount;
             $binanceResult = [
@@ -65,7 +65,7 @@ class CoinBoxController extends Controller
             'symbol' => $buy['symbol']
         ]]);
         $content = json_decode($response->getBody(), true);
-        if($buy['amount'] > 1 )
+        if($buy['amount'] < 1 )
             $amount = $buy['amount'] - ((0.2 * $buy['amount']) / 100);
         $amount = $amount + 0;
         $binanceResult = [
@@ -114,7 +114,7 @@ class CoinBoxController extends Controller
             'symbol' => $buy['symbol']
         ]]);
         $content = json_decode($response->getBody(), true);
-        if($buy['amount'] > 1 )
+        if($buy['amount'] < 1 )
             $amount = $buy['amount'] - ((0.2 * $buy['amount']) / 100);
         $amount = $amount + 0;
         $binanceResult = [
