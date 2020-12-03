@@ -13,6 +13,8 @@ class CoinBoxController extends Controller
 {
     public function index(Request $request, $user)
     {
+        dd();
+        dd(37.337000 - 0.1);
         $buy = Buy::where('user', $user)->get();
         $endpoint = "https://api.binance.com/api/v3/ticker/24hr";
         $client = new \GuzzleHttp\Client();
@@ -24,11 +26,12 @@ class CoinBoxController extends Controller
                 'symbol' => $value['symbol']
             ]]);
             $content = json_decode($response->getBody(), true);
+            $amount = $value['amount'] - (0.1 * $value['amount']) / 100;
             $binanceResult = [
                 'current_price' => $content['lastPrice'],
-                'current_total' => ($value['amount'] * $content['lastPrice']),
-                'profit' => ($value['amount'] * $content['lastPrice']) - $value['total'],
-                'profit_percent' => ((($value['amount'] * $content['lastPrice']) - $value['total']) / $value['total']) * 100,
+                'current_total' => ($amount * $content['lastPrice']),
+                'profit' => ($amount * $content['lastPrice']) - $value['total'],
+                'profit_percent' => ((($amount * $content['lastPrice']) - $value['total']) / $value['total']) * 100,
                 'price_change_percent' => $content['priceChangePercent']];
             $coinsBox[$key] = array_merge($value->toArray(), $binanceResult);
             $all_profit += $binanceResult['profit'];
@@ -62,22 +65,23 @@ class CoinBoxController extends Controller
             'symbol' => $buy['symbol']
         ]]);
         $content = json_decode($response->getBody(), true);
+        $amount = $buy['amount'] - (0.1 * $buy['amount']) / 100;
         $binanceResult = [
-            'profit' => ($buy['amount'] * $content['lastPrice']) - $buy['total'],
-            'profit_percent' => ((($buy['amount'] * $content['lastPrice']) - $buy['total']) / $buy['total']) * 100,
+            'profit' => ($amount * $content['lastPrice']) - $buy['total'],
+            'profit_percent' => ((($amount * $content['lastPrice']) - $buy['total']) / $buy['total']) * 100,
         ];
         //sell
         $userConfig = UserConfig::where('user', $buy['user'])->first();
         $timestamp = strtotime('now') * 1000;
         $string = 'symbol=' . $buy['symbol'] . '&side=SELL&type=MARKET&quantity=' .
-            $buy['amount'] . '&newClientOrderId=my_order_id_' . $buy['id'] . '&timestamp=' . $timestamp;
+            $amount . '&newClientOrderId=my_order_id_' . $buy['id'] . '&timestamp=' . $timestamp;
         $sig = hash_hmac('sha256', $string, $userConfig['binance_api_secret']);
         $endpointSell = "https://api.binance.com/api/v3/order";
         $responseSell = $client->request('POST', $endpointSell, ['query' => [
             'symbol' => $buy['symbol'],
             'side' => 'SELL',
             'type' => 'MARKET',
-            'quantity' => $buy['amount'],
+            'quantity' => $amount,
             'newClientOrderId' => 'my_order_id_' . $buy['id'],
             'timestamp' => $timestamp,
             'signature' => $sig,
@@ -108,9 +112,10 @@ class CoinBoxController extends Controller
             'symbol' => $buy['symbol']
         ]]);
         $content = json_decode($response->getBody(), true);
+        $amount = $buy['amount'] - (0.1 * $buy['amount']) / 100;
         $binanceResult = [
-            'profit' => ($buy['amount'] * $content['lastPrice']) - $buy['total'],
-            'profit_percent' => ((($buy['amount'] * $content['lastPrice']) - $buy['total']) / $buy['total']) * 100,
+            'profit' => ($amount * $content['lastPrice']) - $buy['total'],
+            'profit_percent' => ((($amount * $content['lastPrice']) - $buy['total']) / $buy['total']) * 100,
         ];
 
         TotalProfit::create([
