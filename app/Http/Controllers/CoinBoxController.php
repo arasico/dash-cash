@@ -64,7 +64,7 @@ class CoinBoxController extends Controller
             'symbol' => $buy['symbol']
         ]]);
         $content = json_decode($response->getBody(), true);
-        $amount = $buy['amount'] - ((0.2 * $buy['amount']) / 100);
+        $amount = $buy['amount'];// - ((0.2 * $buy['amount']) / 100);
         $binanceResult = [
             'profit' => ($amount * $content['lastPrice']) - $buy['total'],
             'profit_percent' => ((($amount * $content['lastPrice']) - $buy['total']) / $buy['total']) * 100,
