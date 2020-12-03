@@ -13,8 +13,6 @@ class CoinBoxController extends Controller
 {
     public function index(Request $request, $user)
     {
-        dd();
-        dd(37.337000 - 0.1);
         $buy = Buy::where('user', $user)->get();
         $endpoint = "https://api.binance.com/api/v3/ticker/24hr";
         $client = new \GuzzleHttp\Client();
