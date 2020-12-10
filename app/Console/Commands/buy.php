@@ -55,7 +55,7 @@ class buy extends Command
                 echo "buy\n";
             } else if (sizeof($buyBot) < $value->budget / $value->purchase_amount) {
                 $coinInfo = $this->getCoinInfoForNextBuy($value->symbol, $buyBot[0]);
-                if ($value->buy_percent <= $coinInfo['profit_percent']) {
+                if ($value->buy_percent <= (-$coinInfo['profit_percent'])) {
                     BuyBot::create([
                         'user' => $value->user,
                         'symbol' => $value->symbol,
