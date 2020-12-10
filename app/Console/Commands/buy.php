@@ -20,7 +20,7 @@ class buy extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'buy bot';
 
     /**
      * Create a new command instance.
@@ -87,7 +87,6 @@ class buy extends Command
             'price_change_percent_buy' => $content['priceChangePercent']
         ];
     }
-
 
     public function getCoinInfo($symbol, $purchaseAmount)
     {
