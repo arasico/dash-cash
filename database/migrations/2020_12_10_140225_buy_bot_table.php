@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class BuyTable extends Migration
+class BuyBotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class BuyTable extends Migration
      */
     public function up()
     {
-        Schema::create('buy', function (Blueprint $table) {
+        Schema::create('buy_bot', function (Blueprint $table) {
             $table->id();
             $table->string('user');
             $table->string('symbol');
             $table->decimal('amount', 32, 16);
+            $table->decimal('price', 32, 16);
             $table->decimal('total', 32, 16);
+            $table->decimal('price_change_percent_buy', 32, 16);
             $table->timestamps();
         });
     }
@@ -30,6 +32,6 @@ class BuyTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('buy');
+        Schema::dropIfExists('buy_bot');
     }
 }

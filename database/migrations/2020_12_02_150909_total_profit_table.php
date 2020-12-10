@@ -17,8 +17,8 @@ class TotalProfitTable extends Migration
             $table->id();
             $table->string('user');
             $table->string('symbol');
-            $table->decimal('profit', 16, 6);
-            $table->decimal('profit_percent', 16, 6);
+            $table->decimal('profit', 32, 16);
+            $table->decimal('profit_percent', 32, 16);
             $table->timestamps();
         });
     }
