@@ -24,8 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('coin:buy')->cron('*/5 * * * * *');
-         $schedule->command('coin:sell')->cron('*/5 * * * * *');
+//         $schedule->command('coin:buy')->cron('*/5 * * * * *');
+//         $schedule->command('coin:sell')->cron('*/5 * * * * *');
     }
 
     /**
