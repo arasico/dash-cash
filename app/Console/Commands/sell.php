@@ -59,6 +59,7 @@ class sell extends Command
                         'profit_percent' => $coinInfo['profit_percent'],
                         'price_change_percent_sell' => $coinInfo['price_change_percent_sell'],
                     ]);
+                    BuyBot::where('id', $buyBot->id)->delete();
                     echo "sell\n";
                 }
             }
