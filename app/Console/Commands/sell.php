@@ -47,12 +47,12 @@ class sell extends Command
                 $coinInfo = $this->getCoinInfoForNextBuy($buyBot->symbol, $buyBot);
                 if ($settingBot->sell_percent <= $coinInfo['profit_percent']) {
                     SellBotHistory::create([
-                        'user' => $buyBots->user,
-                        'symbol' => $buyBots->symbol,
-                        'amount' => $buyBots->amount,
-                        'price' => $buyBots->price,
-                        'total' => $buyBots->total,
-                        'price_change_percent_buy' => $buyBots->price_change_percent_buy,
+                        'user' => $buyBot->user,
+                        'symbol' => $buyBot->symbol,
+                        'amount' => $buyBot->amount,
+                        'price' => $buyBot->price,
+                        'total' => $buyBot->total,
+                        'price_change_percent_buy' => $buyBot->price_change_percent_buy,
                         'sell_amount' => $coinInfo['amount'],
                         'sell_price' => $coinInfo['price'],
                         'sell_total' => $coinInfo['current_total'],
