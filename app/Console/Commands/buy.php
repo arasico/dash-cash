@@ -57,15 +57,8 @@ class buy extends Command
                 ]);
                 echo "buy\n";
             } else if (sizeof($buyBot) < $value->budget / $value->purchase_amount) {
-                $coinInfoForNextBuy = $this->getCoinInfoForNextBuy($buyBot[0]);
-                dd($value->buy_percent);
-                dd($value->buy_percent <= (-$coinInfoForNextBuy['profit_percent']));
-                print_r($coinInfo);
-                print_r($coinInfoForNextBuy);
-                dd(1);
-                dd(0.5 <= (-0.5));
-                if ($value->buy_percent <= (-$coinInfoForNextBuy['profit_percent'])) {
-                    print_r($coinInfo);
+                $coinInfoProfitPercent = $this->getCoinProfitPercent($buyBot[0]);
+                if ((-$value->buy_percent) <= $coinInfoProfitPercent['profit_percent']) {
                     BuyBot::create([
                         'user' => $value->user,
                         'symbol' => $value->symbol,
@@ -80,7 +73,7 @@ class buy extends Command
         }
     }
 
-    public function getCoinInfoForNextBuy($buyBot)
+    public function getCoinProfitPercent($buyBot)
     {
         $endpoint = "https://api.binance.com/api/v3/ticker/24hr";
         $client = new \GuzzleHttp\Client();
@@ -90,11 +83,7 @@ class buy extends Command
         $content = json_decode($response->getBody(), true);
         $amount = $buyBot->amount;
         return [
-            'amount' => $amount,
-            'price' => $content['lastPrice'],
-            'current_total' => ($amount * $content['lastPrice']),
             'profit_percent' => ((($amount * $content['lastPrice']) - $buyBot->total) / $buyBot->total) * 100,
-            'price_change_percent_buy' => $content['priceChangePercent']
         ];
     }
 
