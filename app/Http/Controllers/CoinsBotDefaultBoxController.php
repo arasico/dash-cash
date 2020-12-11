@@ -44,4 +44,17 @@ class CoinsBotDefaultBoxController extends Controller
             'buyBot' => BuyBot::count()
         ]);
     }
+
+    public function storeSetting(Request $request)
+    {
+        SettingBot::create([
+            'user' => 'yaser',
+            'symbol' => $request->input('symbol'),
+            'budget' => $request->input('budget'),
+            'purchase_amount' => $request->input('purchase_amount'),
+            'buy_percent' => $request->input('buy_percent'),
+            'sell_percent' => $request->input('sell_percent'),
+        ]);
+        return redirect('/coin/bot/box');
+    }
 }
