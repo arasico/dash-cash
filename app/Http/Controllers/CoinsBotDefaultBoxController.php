@@ -14,7 +14,7 @@ class CoinsBotDefaultBoxController extends Controller
         $settingBots = SettingBot::all();
         $coinsBox = array();
         $all_profit = 0;
-        $profit_percent_daily = 0;
+        $all_profit_percent_daily = 0;
         foreach ($settingBots as $key => $value) {
             $profit_percent = SellBotHistory::where([
                 'user' => $value->user,
@@ -27,7 +27,7 @@ class CoinsBotDefaultBoxController extends Controller
                 'symbol' => $value->symbol,
             ])->whereBetween('created_at', [$from, $to])->sum('profit_percent');
             $all_profit += $profit_percent;
-            $profit_percent_daily += $profit_percent_daily;
+            $all_profit_percent_daily += $profit_percent_daily;
             $coinsBox[$key] = array_merge($value->toArray(), [
                 'profit_percent' => $profit_percent,
                 'profit_percent_daily' => $profit_percent_daily,
@@ -40,7 +40,7 @@ class CoinsBotDefaultBoxController extends Controller
         return view('coinsBotDefaultBox', [
             'coinsBox' => $coinsBox,
             'allProfit' => $all_profit,
-            'profitPercentDaily' => $profit_percent_daily,
+            'profitPercentDaily' => $all_profit_percent_daily,
             'buyBot' => BuyBot::count()
         ]);
     }
