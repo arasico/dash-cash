@@ -47,14 +47,17 @@ class CoinsBotDefaultBoxController extends Controller
 
     public function storeSetting(Request $request)
     {
-        SettingBot::create([
-            'user' => 'yaser',
-            'symbol' => $request->input('symbol'),
-            'budget' => $request->input('budget'),
-            'purchase_amount' => $request->input('purchase_amount'),
-            'buy_percent' => $request->input('buy_percent'),
-            'sell_percent' => $request->input('sell_percent'),
-        ]);
-        return redirect('/coin/bot/box');
+        if (!SettingBot::where('symbol', $request->input('symbol'))->first()) {
+            SettingBot::create([
+                'user' => 'yaser',
+                'symbol' => $request->input('symbol'),
+                'budget' => $request->input('budget'),
+                'purchase_amount' => $request->input('purchase_amount'),
+                'buy_percent' => $request->input('buy_percent'),
+                'sell_percent' => $request->input('sell_percent'),
+            ]);
+            return redirect('/coin/bot/box');
+        }
+        return redirect('/coin/bot/box/setting');
     }
 }

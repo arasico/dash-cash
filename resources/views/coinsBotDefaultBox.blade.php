@@ -41,6 +41,7 @@
     </style>
 </head>
 <body>
+<a href="{{url('/coin/bot/box/setting')}}"><h3>add coin to setting</h3></a>
 <h3>allProfit:{{$allProfit}}</h3>
 <h3>profitPercentDaily:{{$profitPercentDaily}}</h3>
 <h3>buyBot:{{$buyBot}}</h3>
