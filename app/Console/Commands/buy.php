@@ -41,7 +41,10 @@ class buy extends Command
     {
         $settingBot = SettingBot::all();
         foreach ($settingBot as $value) {
-            $buyBot = BuyBot::where('user', $value->user)->orderBy('id', 'DESC')->get();
+            $buyBot = BuyBot::where([
+                'user' => $value->user,
+                'symbol' => $value->symbol,
+            ])->orderBy('id', 'DESC')->get();
             $coinInfo = $this->getCoinInfo($value->symbol, $value->purchase_amount);
             if (sizeof($buyBot) === 0) {
                 BuyBot::create([
@@ -54,8 +57,15 @@ class buy extends Command
                 ]);
                 echo "buy\n";
             } else if (sizeof($buyBot) < $value->budget / $value->purchase_amount) {
-                $coinInfo = $this->getCoinInfoForNextBuy($value->symbol, $buyBot[0]);
-                if ($value->buy_percent <= (-$coinInfo['profit_percent'])) {
+                $coinInfoForNextBuy = $this->getCoinInfoForNextBuy($buyBot[0]);
+                dd($value->buy_percent);
+                dd($value->buy_percent <= (-$coinInfoForNextBuy['profit_percent']));
+                print_r($coinInfo);
+                print_r($coinInfoForNextBuy);
+                dd(1);
+                dd(0.5 <= (-0.5));
+                if ($value->buy_percent <= (-$coinInfoForNextBuy['profit_percent'])) {
+                    print_r($coinInfo);
                     BuyBot::create([
                         'user' => $value->user,
                         'symbol' => $value->symbol,
@@ -70,12 +80,12 @@ class buy extends Command
         }
     }
 
-    public function getCoinInfoForNextBuy($symbol, $buyBot)
+    public function getCoinInfoForNextBuy($buyBot)
     {
         $endpoint = "https://api.binance.com/api/v3/ticker/24hr";
         $client = new \GuzzleHttp\Client();
         $response = $client->request('GET', $endpoint, ['query' => [
-            'symbol' => $symbol
+            'symbol' => $buyBot->symbol
         ]]);
         $content = json_decode($response->getBody(), true);
         $amount = $buyBot->amount;
@@ -83,7 +93,7 @@ class buy extends Command
             'amount' => $amount,
             'price' => $content['lastPrice'],
             'current_total' => ($amount * $content['lastPrice']),
-            'profit_percent' => ((($amount * $content['lastPrice']) - $buyBot['total']) / $buyBot['total']) * 100,
+            'profit_percent' => ((($amount * $content['lastPrice']) - $buyBot->total) / $buyBot->total) * 100,
             'price_change_percent_buy' => $content['priceChangePercent']
         ];
     }
@@ -96,9 +106,8 @@ class buy extends Command
             'symbol' => $symbol
         ]]);
         $content = json_decode($response->getBody(), true);
-        $amount = $purchaseAmount / $content['lastPrice'];
         return [
-            'amount' => $amount,
+            'amount' => ($purchaseAmount / $content['lastPrice']),
             'price' => $content['lastPrice'],
             'price_change_percent_buy' => $content['priceChangePercent'],
         ];
