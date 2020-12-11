@@ -7,7 +7,7 @@
         .card {
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
             width: 320px;
-            height: 290px;
+            height: 315px;
             text-align: center;
             margin: 5px;
             font-family: arial;
@@ -56,6 +56,7 @@
             <p>profit_all:{{$value['profit_percent']}}</p>
             <p>profit_daily:{{$value['profit_percent_daily']}}</p>
             <p>buyBot:{{$value['buyBot']}}</p>
+            <p>countAll:{{$value['count_all']}}</p>
         </div>
     @endforeach
 </div>

@@ -34,6 +34,10 @@ class CoinsBotDefaultBoxController extends Controller
                 'buyBot' => BuyBot::where([
                     'user' => $value->user,
                     'symbol' => $value->symbol,
+                ])->count(),
+                'count_all' => SellBotHistory::where([
+                    'user' => $value->user,
+                    'symbol' => $value->symbol,
                 ])->count()
             ]);
         }
