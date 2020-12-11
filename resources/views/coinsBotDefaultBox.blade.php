@@ -42,6 +42,7 @@
 </head>
 <body>
 <h3>allProfit:{{$allProfit}}</h3>
+<h3>buyBot:{{$buyBot}}</h3>
 <div style="width: 100%; float: right; height: 100vh;">
     @foreach($coinsBox as $value)
         <div class="card greenCandle">
