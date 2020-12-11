@@ -46,20 +46,22 @@ class sell extends Command
             foreach ($buyBots as $buyBot) {
                 $coinInfo = $this->getCoinInfoForNextBuy($buyBot->symbol, $buyBot);
                 if ($settingBot->sell_percent <= $coinInfo['profit_percent']) {
-                    SellBotHistory::create([
-                        'user' => $buyBot->user,
-                        'symbol' => $buyBot->symbol,
-                        'amount' => $buyBot->amount,
-                        'price' => $buyBot->price,
-                        'total' => $buyBot->total,
-                        'price_change_percent_buy' => $buyBot->price_change_percent_buy,
-                        'sell_amount' => $coinInfo['amount'],
-                        'sell_price' => $coinInfo['price'],
-                        'sell_total' => $coinInfo['current_total'],
-                        'profit_percent' => $coinInfo['profit_percent'],
-                        'price_change_percent_sell' => $coinInfo['price_change_percent_sell'],
-                    ]);
-                    BuyBot::where('id', $buyBot->id)->delete();
+                    if (BuyBot::where('id', $buyBot->id)->first()) {
+                        SellBotHistory::create([
+                            'user' => $buyBot->user,
+                            'symbol' => $buyBot->symbol,
+                            'amount' => $buyBot->amount,
+                            'price' => $buyBot->price,
+                            'total' => $buyBot->total,
+                            'price_change_percent_buy' => $buyBot->price_change_percent_buy,
+                            'sell_amount' => $coinInfo['amount'],
+                            'sell_price' => $coinInfo['price'],
+                            'sell_total' => $coinInfo['current_total'],
+                            'profit_percent' => $coinInfo['profit_percent'],
+                            'price_change_percent_sell' => $coinInfo['price_change_percent_sell'],
+                        ]);
+                        BuyBot::where('id', $buyBot->id)->delete();
+                    }
                     echo "sell\n";
                 }
             }
