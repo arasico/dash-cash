@@ -58,7 +58,7 @@ class buy extends Command
                 echo "buy\n";
             } else if (sizeof($buyBot) < $value->budget / $value->purchase_amount) {
                 $coinInfoProfitPercent = $this->getCoinProfitPercent($buyBot[0]);
-                if ((-$value->buy_percent) <= $coinInfoProfitPercent['profit_percent']) {
+                if ((-$value->buy_percent) >= $coinInfoProfitPercent['profit_percent']) {
                     BuyBot::create([
                         'user' => $value->user,
                         'symbol' => $value->symbol,
@@ -83,7 +83,11 @@ class buy extends Command
         $content = json_decode($response->getBody(), true);
         $amount = $buyBot->amount;
         return [
+            'amount' => $amount,
+            'price' => $content['lastPrice'],
+            'current_total' => ($amount * $content['lastPrice']),
             'profit_percent' => ((($amount * $content['lastPrice']) - $buyBot->total) / $buyBot->total) * 100,
+            'price_change_percent_buy' => $content['priceChangePercent']
         ];
     }
 
