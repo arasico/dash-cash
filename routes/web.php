@@ -19,3 +19,4 @@ Route::post('/buy', [\App\Http\Controllers\CoinBoxController::class, 'storeBuy']
 Route::post('/coin/sell/{id}', [\App\Http\Controllers\CoinBoxController::class, 'sellBuy']);
 Route::post('/coin/sell/manual/{id}', [\App\Http\Controllers\CoinBoxController::class, 'sellManualBuy']);
 Route::delete('/coin/delete/{id}', [\App\Http\Controllers\CoinBoxController::class, 'destroyBuy']);
+Route::get('/coin/bot/box', [\App\Http\Controllers\CoinsBotDefaultBoxController::class, 'index']);
