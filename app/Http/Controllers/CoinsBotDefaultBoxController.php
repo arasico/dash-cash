@@ -96,4 +96,48 @@ class CoinsBotDefaultBoxController extends Controller
             'allProfitPercent' => $all_profit_percent,
         ]);
     }
+
+    protected function sellManual($id)
+    {
+        $buyBot = BuyBot::where('id', $id)->first();
+        $settingBot = SettingBot::where('symbol', $buyBot->symbol)->first();
+        $coinInfo = $this->getCoinInfoForNextBuy($buyBot->symbol, $buyBot);
+        if ($settingBot->sell_percent <= $coinInfo['profit_percent']) {
+            if (BuyBot::where('id', $buyBot->id)->first()) {
+                SellBotHistory::create([
+                    'user' => $buyBot->user,
+                    'symbol' => $buyBot->symbol,
+                    'amount' => $buyBot->amount,
+                    'price' => $buyBot->price,
+                    'total' => $buyBot->total,
+                    'price_change_percent_buy' => $buyBot->price_change_percent_buy,
+                    'sell_amount' => $coinInfo['amount'],
+                    'sell_price' => $coinInfo['price'],
+                    'sell_total' => $coinInfo['current_total'],
+                    'profit_percent' => $coinInfo['profit_percent'],
+                    'price_change_percent_sell' => $coinInfo['price_change_percent_sell'],
+                ]);
+                BuyBot::where('id', $buyBot->id)->delete();
+            }
+        }
+        return redirect('/coin/bot/box/dashboard');
+    }
+
+    private function getCoinInfoForNextBuy($symbol, $buyBot)
+    {
+        $endpoint = "https://api.binance.com/api/v3/ticker/24hr";
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', $endpoint, ['query' => [
+            'symbol' => $symbol
+        ]]);
+        $content = json_decode($response->getBody(), true);
+        $amount = $buyBot->amount;
+        return [
+            'amount' => $amount,
+            'price' => $content['lastPrice'],
+            'current_total' => ($amount * $content['lastPrice']),
+            'profit_percent' => ((($amount * $content['lastPrice']) - $buyBot['total']) / $buyBot['total']) * 100,
+            'price_change_percent_sell' => $content['priceChangePercent']
+        ];
+    }
 }

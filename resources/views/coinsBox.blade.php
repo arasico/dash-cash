@@ -70,7 +70,6 @@
             </form>
             </p>
             <p>
-            <p>
             <form class="sellManual" action="{{ url('/coin/sell/manual/'. $value['id'])}}" method="POST">
                 @csrf
                 <input type="submit" value="sell manual"/>

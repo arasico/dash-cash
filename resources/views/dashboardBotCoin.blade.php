@@ -7,7 +7,7 @@
         .card {
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
             width: 300px;
-            height: 330px;
+            height: 370px;
             text-align: center;
             margin: 5px;
             font-family: arial;
@@ -64,9 +64,21 @@
             <p>profit:{{$value['profit']}}</p>
             <p>profit_percent:{{$value['profit_percent']}}</p>
             <p>price_change_percent:{{$value['price_change_percent']}}</p>
+            <p>
+            <form class="sellManual" action="{{ url('/coin/bot/sell/'. $value['id'])}}" method="POST">
+                @csrf
+                <input type="submit" value="sell manual"/>
+            </form>
+            </p>
         </div>
     @endforeach
 </div>
+
+<script>
+    $(".sellManual").on("submit", function () {
+        return confirm("Are you sure to sell manual?");
+    });
+</script>
 </body>
 </html>
 
