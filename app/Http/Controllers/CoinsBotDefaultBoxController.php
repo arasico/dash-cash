@@ -118,9 +118,9 @@ class CoinsBotDefaultBoxController extends Controller
                     'price_change_percent_sell' => $coinInfo['price_change_percent_sell'],
                 ]);
                 BuyBot::where('id', $buyBot->id)->delete();
+                return redirect('/coin/bot/box/dashboard');
             }
         }
-        return redirect('/coin/bot/box/dashboard');
     }
 
     private function getCoinInfoForNextBuy($symbol, $buyBot)
