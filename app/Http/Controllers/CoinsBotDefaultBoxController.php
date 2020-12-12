@@ -64,4 +64,36 @@ class CoinsBotDefaultBoxController extends Controller
         }
         return redirect('/coin/bot/box/setting');
     }
+
+    public function dashboardBot(Request $request)
+    {
+        $buyBot = BuyBot::all();
+        $endpoint = "https://api.binance.com/api/v3/ticker/24hr";
+        $client = new \GuzzleHttp\Client();
+        $coinsBox = array();
+        $all_profit = 0;
+        $all_profit_percent = 0;
+        foreach ($buyBot as $key => $value) {
+            $response = $client->request('GET', $endpoint, ['query' => [
+                'symbol' => $value['symbol']
+            ]]);
+            $content = json_decode($response->getBody(), true);
+            $amount = $value['amount'];
+            $binanceResult = [
+                'current_price' => $content['lastPrice'],
+                'current_total' => ($amount * $content['lastPrice']),
+                'profit' => ($amount * $content['lastPrice']) - $value['total'],
+                'profit_percent' => ((($amount * $content['lastPrice']) - $value['total']) / $value['total']) * 100,
+                'price_change_percent' => $content['priceChangePercent']
+            ];
+            $coinsBox[$key] = array_merge($value->toArray(), $binanceResult);
+            $all_profit += $binanceResult['profit'];
+            $all_profit_percent += $binanceResult['profit_percent'];
+        }
+        return view('dashboardBotCoin', [
+            'coinsBox' => $coinsBox,
+            'allProfit' => $all_profit,
+            'allProfitPercent' => $all_profit_percent,
+        ]);
+    }
 }
